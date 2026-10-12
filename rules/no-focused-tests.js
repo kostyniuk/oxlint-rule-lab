@@ -9,10 +9,13 @@ export default {
     return {
       CallExpression(node) {
         const member = node.callee;
-        if (member.type !== 'MemberExpression' || member.computed) return;
+        if (member.type !== 'MemberExpression') return;
         if (member.object.type !== 'Identifier') return;
         if (!['it', 'test', 'describe'].includes(member.object.name)) return;
-        if (member.property.name !== 'only') return;
+        const name = member.computed
+          ? member.property.type === 'Literal' ? member.property.value : null
+          : member.property.name;
+        if (name !== 'only') return;
         context.report({ node: member.property, messageId: 'focused' });
       },
     };
