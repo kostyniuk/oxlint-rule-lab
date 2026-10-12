@@ -1,0 +1,18 @@
+{
+  "name": "oxlint-rule-lab",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "lint": "oxlint rules tests exercises",
+    "demo": "oxlint examples"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "A hands-on course in custom Oxlint rules",
+  "devDependencies": {
+    "oxlint": "1.87.0"
+  },
+  "type": "module",
+  "private": true
+}

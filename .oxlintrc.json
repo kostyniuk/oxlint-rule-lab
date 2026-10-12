@@ -1,0 +1,11 @@
+{
+  "categories": {
+    "correctness": "off"
+  },
+  "jsPlugins": [
+    "./plugin.js"
+  ],
+  "rules": {
+    "lab/no-focused-tests": "error"
+  }
+}
