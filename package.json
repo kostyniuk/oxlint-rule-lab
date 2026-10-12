@@ -4,7 +4,8 @@
   "scripts": {
     "test": "node --test tests/*.test.js",
     "lint": "oxlint rules tests exercises",
-    "demo": "oxlint examples"
+    "demo": "oxlint examples",
+    "exercise": "node --test tests/exercise.js"
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,272 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Rule-writing reference</title><link rel="stylesheet" href="../assets/course.css"><style>
+  :root {
+    --ivory:   #FAF9F5;
+    --slate:   #141413;
+    --clay:    #D97757;
+    --oat:     #E3DACC;
+    --olive:   #788C5D;
+    --gray-150:#F0EEE6;
+    --gray-300:#D1CFC5;
+    --gray-500:#87867F;
+    --gray-700:#3D3D3A;
+    --serif: ui-serif, Georgia, "Times New Roman", serif;
+    --sans:  system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono:  ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--ivory);
+    color: var(--gray-700);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    padding: 56px 24px 120px;
+  }
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 48px;
+  }
+  @media (max-width: 920px) { .page { grid-template-columns: 1fr; } nav { display: none; } }
+
+  /* ── nav ──────────────────────────────── */
+  nav {
+    position: sticky;
+    top: 32px;
+    align-self: start;
+    font-size: 13px;
+  }
+  nav .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    margin-bottom: 12px;
+  }
+  nav a {
+    display: block;
+    padding: 5px 0 5px 12px;
+    border-left: 2px solid var(--gray-300);
+    color: var(--gray-700);
+    text-decoration: none;
+  }
+  nav a:hover { color: var(--slate); border-color: var(--slate); }
+  nav a.l2 { padding-left: 24px; font-size: 12.5px; color: var(--gray-500); }
+  nav .files {
+    margin-top: 28px;
+    border-top: 1px solid var(--gray-300);
+    padding-top: 16px;
+  }
+  nav .files code {
+    display: block;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gray-500);
+    padding: 3px 0;
+  }
+
+  /* ── header ───────────────────────────── */
+  header { margin-bottom: 12px; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 32px;
+    color: var(--slate);
+    letter-spacing: -0.01em;
+    margin-bottom: 14px;
+  }
+  .tldr {
+    border: 1.5px solid var(--gray-300);
+    border-left: 3px solid var(--clay);
+    border-radius: 10px;
+    background: #fff;
+    padding: 16px 18px;
+    margin-bottom: 8px;
+  }
+  .tldr b { color: var(--slate); }
+
+  h2 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 22px;
+    color: var(--slate);
+    margin: 40px 0 14px;
+    scroll-margin-top: 24px;
+  }
+  p { margin-bottom: 12px; max-width: 680px; }
+  code { font-family: var(--mono); font-size: 13px; }
+
+  /* ── collapsible ─────────────────────── */
+  details {
+    border: 1.5px solid var(--gray-300);
+    border-radius: 10px;
+    background: #fff;
+    margin: 14px 0;
+    overflow: hidden;
+  }
+  summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--slate);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::before {
+    content: "▸";
+    color: var(--clay);
+    font-family: var(--sans);
+    font-size: 12px;
+    transition: transform 120ms;
+  }
+  details[open] summary::before { transform: rotate(90deg); }
+  summary .where {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gray-500);
+    margin-left: auto;
+  }
+  details .body { padding: 0 16px 16px; }
+  details .body p { font-size: 14px; }
+
+  /* ── tabs ─────────────────────────────── */
+  .tabs {
+    border: 1.5px solid var(--gray-300);
+    border-radius: 10px;
+    background: #fff;
+    margin: 16px 0 8px;
+    overflow: hidden;
+  }
+  .tabbar {
+    display: flex;
+    border-bottom: 1px solid var(--gray-300);
+    background: var(--gray-150);
+  }
+  .tabbar button {
+    appearance: none;
+    border: none;
+    background: none;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--gray-500);
+    padding: 10px 16px;
+    cursor: pointer;
+    border-right: 1px solid var(--gray-300);
+  }
+  .tabbar button.on {
+    background: #fff;
+    color: var(--slate);
+    border-bottom: 2px solid var(--clay);
+    margin-bottom: -1px;
+  }
+  .tabs pre {
+    display: none;
+    margin: 0;
+    padding: 16px 18px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--slate);
+    overflow-x: auto;
+  }
+  .tabs pre.on { display: block; }
+  .hl { color: var(--clay); }
+  .cm { color: var(--gray-500); }
+
+  /* ── callout ──────────────────────────── */
+  .callout {
+    display: flex;
+    gap: 12px;
+    border: 1.5px solid var(--oat);
+    background: rgba(227,218,204,0.35);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 18px 0;
+    font-size: 14px;
+  }
+  .callout .ico { color: var(--clay); font-weight: 600; }
+
+  /* ── faq ──────────────────────────────── */
+  dl.faq { margin-top: 8px; }
+  dl.faq dt {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--slate);
+    margin-top: 18px;
+  }
+  dl.faq dd { font-size: 14px; margin: 4px 0 0; max-width: 640px; }
+
+  /* ── optional extensions (same grammar) ─ */
+  ul.gotchas { padding-left: 20px; max-width: 680px; }
+  ul.gotchas li { margin-bottom: 8px; }
+  table.grid {
+    width: 100%;
+    max-width: 680px;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1.5px solid var(--gray-300);
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 14px;
+    margin: 16px 0;
+  }
+  table.grid th {
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    font-weight: normal;
+    background: var(--gray-150);
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--gray-300);
+  }
+  table.grid td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--gray-300);
+    vertical-align: top;
+  }
+  table.grid tr:last-child td { border-bottom: none; }
+  pre.plain {
+    background: #fff;
+    border: 1.5px solid var(--gray-300);
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--slate);
+    overflow-x: auto;
+    margin: 16px 0;
+    max-width: 680px;
+  }
+
+@media print { body { padding: 0; } nav { display:none; } .page { display:block; } details { break-inside:avoid; } }
+button { font:inherit; padding:8px; margin:4px; cursor:pointer; }</style></head><body><div class="page"><nav><div class="label">Course</div><a href="../lessons/0001-first-rule.html">01 · First rule</a><a href="../lessons/0002-precision-and-tests.html">02 · Precision and tests</a><a href="../lessons/0003-ship-the-rule.html">03 · Ship the rule</a><a href="../reference/rule-writing.html">Quick reference</a><div class="files"><div class="label">Sources</div><code>Oxc plugin guide</code><code>ESLint custom rules</code></div></nav><main><header><div class="eyebrow">Oxlint rule lab · five-minute lesson</div><h1>Rule-writing reference</h1><div class="tldr"><b>TL;DR</b> — Use one vocabulary throughout the lab: node, visitor, predicate, report, plugin, and configuration.</div></header><h2>Vocabulary</h2><dl class="faq"><dt>AST node</dt><dd>A parsed piece of syntax, such as a call or member access.</dd><dt>Visitor</dt><dd>A callback registered for an AST node type.</dd><dt>Predicate</dt><dd>The checks deciding whether this node violates the convention.</dd><dt>Report</dt><dd>The diagnostic emitted with context.report.</dd><dt>Plugin</dt><dd>The exported collection of named rules.</dd><dt>Configuration</dt><dd>The project file that loads plugins and selects rule severity.</dd></dl><h2>Checklist</h2><p>Write valid and invalid examples first. Inspect their ASTs. Choose a visitor. Add guards. Report the useful span. Test counterexamples. Enable the plugin. Document what the rule cannot prove.</p><h2>Commands</h2><pre class="plain">npm ci
+npm test           # solution tests
+npm run lint       # implementation and tests
+npm run demo       # deliberately exits 1
+npm run exercise   # fails until you complete the exercise</pre><p>Primary API reference: <a href="https://eslint.org/docs/latest/extend/custom-rules">ESLint custom rules</a>. Current engine limits: <a href="https://oxc.rs/docs/guide/usage/linter/js-plugins#api-support">Oxlint API support</a>.</p><h2>Keep learning</h2><p>Ask the agent about anything unclear. Show your exercise diff or explain your prediction; we will choose the next lesson from that evidence.</p></main></div><script>document.querySelectorAll('[data-answer]').forEach(box => {
+  box.querySelectorAll('button').forEach(button => button.addEventListener('click', () => {
+    box.querySelector('[role="status"]').textContent = button.dataset.value === box.dataset.answer
+      ? 'Correct. ' + box.dataset.reason : 'Try again. ' + box.dataset.hint;
+  }));
+});
+</script></body></html>
