@@ -1,36 +1,58 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Rule-writing reference</title><link rel="stylesheet" href="../assets/course.css"><style>* { box-sizing: border-box; }
-body { margin:0; background:#fff; color:#202530; font:16px/1.7 system-ui,sans-serif; padding:48px 24px 100px; }
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Rule-writing reference</title><link rel="stylesheet" href="../assets/course.css"><style> :root { color-scheme:dark; --page:#000; --text:#e8edf5; --muted:#a1adbf; --link:#8bb4ff; --border:#303947; --code:#11151c; --button:#0b0e14; --button-border:#657289; }
+:root[data-theme="light"] { color-scheme:light; --page:#fff; --text:#202530; --muted:#687384; --link:#245dcc; --border:#dbe0e8; --code:#f5f7fa; --button:#fff; --button-border:#adb7c7; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--page); color:var(--text); font:16px/1.7 system-ui,sans-serif; padding:48px 24px 100px; }
 .page { display:grid; grid-template-columns:190px minmax(0,1fr); gap:56px; max-width:1080px; margin:auto; }
 nav { position:sticky; top:32px; align-self:start; font-size:14px; }
 nav a { display:block; padding:7px 0; }
-a { color:#245dcc; text-underline-offset:3px; }
-.label,.eyebrow,.where { font:12px/1.6 ui-monospace,monospace; color:#687384; }
+a { color:var(--link); text-underline-offset:3px; }
+.label,.eyebrow,.where { font:12px/1.6 ui-monospace,monospace; color:var(--muted); }
 .eyebrow { text-transform:uppercase; letter-spacing:.08em; }
 h1 { font-size:clamp(30px,4vw,42px); line-height:1.2; letter-spacing:-.035em; margin:12px 0 24px; }
 h2 { font-size:23px; line-height:1.3; margin:36px 0 12px; }
 p { max-width:700px; margin:12px 0; }
-.tldr,details { border:1px solid #dbe0e8; border-radius:8px; padding:18px 22px; margin:18px 0; }
-.tldr { border-left:4px solid #245dcc; }
+.tldr,details { border:1px solid var(--border); border-radius:8px; padding:18px 22px; margin:18px 0; }
+.tldr { border-left:4px solid var(--link); }
 summary { cursor:pointer; font-weight:650; }
 .where { float:right; }
 code,pre { font-family:ui-monospace,monospace; font-size:14px; }
-pre { background:#f5f7fa; border:1px solid #dbe0e8; border-radius:8px; padding:18px; overflow-x:auto; line-height:1.6; }
-button { background:#fff; color:#202530; border:1px solid #adb7c7; border-radius:5px; font:inherit; padding:7px 14px; margin:6px 8px 6px 0; cursor:pointer; }
-button:hover { border-color:#245dcc; }
-button:focus-visible,a:focus-visible,summary:focus-visible { outline:3px solid #245dcc; outline-offset:3px; }
-.files { margin-top:28px; border-top:1px solid #dbe0e8; padding-top:18px; }
-.files code { display:block; font-size:12px; color:#687384; }
+pre { background:var(--code); border:1px solid var(--border); border-radius:8px; padding:18px; overflow-x:auto; line-height:1.6; }
+button { background:var(--button); color:var(--text); border:1px solid var(--button-border); border-radius:5px; font:inherit; padding:7px 14px; margin:6px 8px 6px 0; cursor:pointer; }
+button:hover { border-color:var(--link); }
+button:focus-visible,a:focus-visible,summary:focus-visible { outline:3px solid var(--link); outline-offset:3px; }
+.files { margin-top:28px; border-top:1px solid var(--border); padding-top:18px; }
+.files code { display:block; font-size:12px; color:var(--muted); }
 dl dt { font-weight:650; margin-top:18px; } dl dd { margin:4px 0; }
 @media(max-width:800px) { .page { grid-template-columns:1fr; gap:28px; } nav { position:static; } nav a { display:inline-block; margin-right:16px; } nav .files { display:none; } }
 @media print { body { padding:0; font-size:12px; } nav { display:none; } .page { display:block; } details,pre { break-inside:avoid; } button { display:none; } }
-</style></head><body><div class="page"><nav><div class="label">Course</div><a href="../lessons/0001-first-rule.html">01 · First rule</a><a href="../lessons/0002-precision-and-tests.html">02 · Precision and tests</a><a href="../lessons/0003-ship-the-rule.html">03 · Ship the rule</a><a href="../reference/rule-writing.html">Quick reference</a><div class="files"><div class="label">Sources</div><code>Oxc plugin guide</code><code>ESLint custom rules</code></div></nav><main><header><div class="eyebrow">Oxlint rule lab · five-minute lesson</div><h1>Rule-writing reference</h1><div class="tldr"><b>TL;DR</b> — Use one vocabulary throughout the lab: node, visitor, predicate, report, plugin, and configuration.</div></header><h2>Vocabulary</h2><dl class="faq"><dt>AST node</dt><dd>A parsed piece of syntax, such as a call or member access.</dd><dt>Visitor</dt><dd>A callback registered for an AST node type.</dd><dt>Predicate</dt><dd>The checks deciding whether this node violates the convention.</dd><dt>Report</dt><dd>The diagnostic emitted with context.report.</dd><dt>Plugin</dt><dd>The exported collection of named rules.</dd><dt>Configuration</dt><dd>The project file that loads plugins and selects rule severity.</dd></dl><h2>Checklist</h2><p>Write valid and invalid examples first. Inspect their ASTs. Choose a visitor. Add guards. Report the useful span. Test counterexamples. Enable the plugin. Document what the rule cannot prove.</p><h2>Commands</h2><pre class="plain">npm ci
+.theme-control { margin:0 0 20px; }
+.lesson-pagination { display:flex; justify-content:space-between; gap:24px; border-top:1px solid var(--border); margin-top:40px; padding-top:20px; }
+.lesson-pagination a { max-width:48%; text-decoration:none; }
+.lesson-pagination a:last-child { text-align:right; }
+.lesson-pagination small { display:block; color:var(--muted); font:12px/1.6 ui-monospace,monospace; }
+@media print { :root,:root[data-theme="light"] { --page:#fff; --text:#202530; --muted:#687384; --link:#245dcc; --border:#dbe0e8; --code:#f5f7fa; color-scheme:light; } .theme-control { display:none; } }
+</style></head><body><div class="page"><nav><div class="label">Course</div><a href="../lessons/0001-first-rule.html">01 · First rule</a><a href="../lessons/0002-precision-and-tests.html">02 · Precision and tests</a><a href="../lessons/0003-ship-the-rule.html">03 · Ship the rule</a><a href="../reference/rule-writing.html">Quick reference</a><div class="files"><div class="label">Sources</div><code>Oxc plugin guide</code><code>ESLint custom rules</code></div></nav><main><div class="theme-control"><button type="button" data-theme-toggle aria-pressed="true">Use light theme</button></div><header><div class="eyebrow">Oxlint rule lab · five-minute lesson</div><h1>Rule-writing reference</h1><div class="tldr"><b>TL;DR</b> — Use one vocabulary throughout the lab: node, visitor, predicate, report, plugin, and configuration.</div></header><h2>Vocabulary</h2><dl class="faq"><dt>AST node</dt><dd>A parsed piece of syntax, such as a call or member access.</dd><dt>Visitor</dt><dd>A callback registered for an AST node type.</dd><dt>Predicate</dt><dd>The checks deciding whether this node violates the convention.</dd><dt>Report</dt><dd>The diagnostic emitted with context.report.</dd><dt>Plugin</dt><dd>The exported collection of named rules.</dd><dt>Configuration</dt><dd>The project file that loads plugins and selects rule severity.</dd></dl><h2>Checklist</h2><p>Write valid and invalid examples first. Inspect their ASTs. Choose a visitor. Add guards. Report the useful span. Test counterexamples. Enable the plugin. Document what the rule cannot prove.</p><h2>Commands</h2><pre class="plain">npm ci
 npm test           # solution tests
 npm run lint       # implementation and tests
 npm run demo       # deliberately exits 1
-npm run exercise   # fails until you complete the exercise</pre><p>Primary API reference: <a href="https://eslint.org/docs/latest/extend/custom-rules">ESLint custom rules</a>. Current engine limits: <a href="https://oxc.rs/docs/guide/usage/linter/js-plugins#api-support">Oxlint API support</a>.</p><h2>Keep learning</h2><p>Ask the agent about anything unclear. Show your exercise diff or explain your prediction; we will choose the next lesson from that evidence.</p></main></div><script>document.querySelectorAll('[data-answer]').forEach(box => {
+npm run exercise   # fails until you complete the exercise</pre><p>Primary API reference: <a href="https://eslint.org/docs/latest/extend/custom-rules">ESLint custom rules</a>. Current engine limits: <a href="https://oxc.rs/docs/guide/usage/linter/js-plugins#api-support">Oxlint API support</a>.</p><h2>Keep learning</h2><p>Ask the agent about anything unclear. Show your exercise diff or explain your prediction; we will choose the next lesson from that evidence.</p><footer class="lesson-pagination" aria-label="Lesson navigation"><a rel="prev" href="../lessons/0003-ship-the-rule.html"><small>← Previous</small>03 · Ship the rule</a><a rel="next" href="../lessons/0001-first-rule.html"><small>Next →</small>01 · First rule</a></footer></main></div><script>document.querySelectorAll('[data-answer]').forEach(box => {
   box.querySelectorAll('button').forEach(button => button.addEventListener('click', () => {
     box.querySelector('[role="status"]').textContent = button.dataset.value === box.dataset.answer
       ? 'Correct. ' + box.dataset.reason : 'Try again. ' + box.dataset.hint;
   }));
+});
+</script><script>const themeButton = document.querySelector('[data-theme-toggle]');
+let savedTheme;
+try { savedTheme = localStorage.getItem('oxlint-course-theme'); } catch {}
+function setTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  themeButton.textContent = theme === 'dark' ? 'Use light theme' : 'Use black theme';
+  themeButton.setAttribute('aria-pressed', String(theme === 'dark'));
+}
+setTheme(savedTheme === 'light' ? 'light' : 'dark');
+themeButton.addEventListener('click', () => {
+  const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  setTheme(theme);
+  try { localStorage.setItem('oxlint-course-theme', theme); } catch {}
 });
 </script></body></html>
