@@ -1,265 +1,29 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>03 · Wire the rule into a project</title><link rel="stylesheet" href="../assets/course.css"><style>
-  :root {
-    --ivory:   #FAF9F5;
-    --slate:   #141413;
-    --clay:    #D97757;
-    --oat:     #E3DACC;
-    --olive:   #788C5D;
-    --gray-150:#F0EEE6;
-    --gray-300:#D1CFC5;
-    --gray-500:#87867F;
-    --gray-700:#3D3D3A;
-    --serif: ui-serif, Georgia, "Times New Roman", serif;
-    --sans:  system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    --mono:  ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--ivory);
-    color: var(--gray-700);
-    font-family: var(--sans);
-    font-size: 15px;
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
-    padding: 56px 24px 120px;
-  }
-  .page {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 200px minmax(0, 1fr);
-    gap: 48px;
-  }
-  @media (max-width: 920px) { .page { grid-template-columns: 1fr; } nav { display: none; } }
-
-  /* ── nav ──────────────────────────────── */
-  nav {
-    position: sticky;
-    top: 32px;
-    align-self: start;
-    font-size: 13px;
-  }
-  nav .label {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gray-500);
-    margin-bottom: 12px;
-  }
-  nav a {
-    display: block;
-    padding: 5px 0 5px 12px;
-    border-left: 2px solid var(--gray-300);
-    color: var(--gray-700);
-    text-decoration: none;
-  }
-  nav a:hover { color: var(--slate); border-color: var(--slate); }
-  nav a.l2 { padding-left: 24px; font-size: 12.5px; color: var(--gray-500); }
-  nav .files {
-    margin-top: 28px;
-    border-top: 1px solid var(--gray-300);
-    padding-top: 16px;
-  }
-  nav .files code {
-    display: block;
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--gray-500);
-    padding: 3px 0;
-  }
-
-  /* ── header ───────────────────────────── */
-  header { margin-bottom: 12px; }
-  .eyebrow {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--gray-500);
-    margin-bottom: 10px;
-  }
-  h1 {
-    font-family: var(--serif);
-    font-weight: 500;
-    font-size: 32px;
-    color: var(--slate);
-    letter-spacing: -0.01em;
-    margin-bottom: 14px;
-  }
-  .tldr {
-    border: 1.5px solid var(--gray-300);
-    border-left: 3px solid var(--clay);
-    border-radius: 10px;
-    background: #fff;
-    padding: 16px 18px;
-    margin-bottom: 8px;
-  }
-  .tldr b { color: var(--slate); }
-
-  h2 {
-    font-family: var(--serif);
-    font-weight: 500;
-    font-size: 22px;
-    color: var(--slate);
-    margin: 40px 0 14px;
-    scroll-margin-top: 24px;
-  }
-  p { margin-bottom: 12px; max-width: 680px; }
-  code { font-family: var(--mono); font-size: 13px; }
-
-  /* ── collapsible ─────────────────────── */
-  details {
-    border: 1.5px solid var(--gray-300);
-    border-radius: 10px;
-    background: #fff;
-    margin: 14px 0;
-    overflow: hidden;
-  }
-  summary {
-    list-style: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    font-family: var(--serif);
-    font-size: 16px;
-    color: var(--slate);
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-  }
-  summary::-webkit-details-marker { display: none; }
-  summary::before {
-    content: "▸";
-    color: var(--clay);
-    font-family: var(--sans);
-    font-size: 12px;
-    transition: transform 120ms;
-  }
-  details[open] summary::before { transform: rotate(90deg); }
-  summary .where {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--gray-500);
-    margin-left: auto;
-  }
-  details .body { padding: 0 16px 16px; }
-  details .body p { font-size: 14px; }
-
-  /* ── tabs ─────────────────────────────── */
-  .tabs {
-    border: 1.5px solid var(--gray-300);
-    border-radius: 10px;
-    background: #fff;
-    margin: 16px 0 8px;
-    overflow: hidden;
-  }
-  .tabbar {
-    display: flex;
-    border-bottom: 1px solid var(--gray-300);
-    background: var(--gray-150);
-  }
-  .tabbar button {
-    appearance: none;
-    border: none;
-    background: none;
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--gray-500);
-    padding: 10px 16px;
-    cursor: pointer;
-    border-right: 1px solid var(--gray-300);
-  }
-  .tabbar button.on {
-    background: #fff;
-    color: var(--slate);
-    border-bottom: 2px solid var(--clay);
-    margin-bottom: -1px;
-  }
-  .tabs pre {
-    display: none;
-    margin: 0;
-    padding: 16px 18px;
-    font-family: var(--mono);
-    font-size: 12.5px;
-    line-height: 1.6;
-    color: var(--slate);
-    overflow-x: auto;
-  }
-  .tabs pre.on { display: block; }
-  .hl { color: var(--clay); }
-  .cm { color: var(--gray-500); }
-
-  /* ── callout ──────────────────────────── */
-  .callout {
-    display: flex;
-    gap: 12px;
-    border: 1.5px solid var(--oat);
-    background: rgba(227,218,204,0.35);
-    border-radius: 10px;
-    padding: 14px 16px;
-    margin: 18px 0;
-    font-size: 14px;
-  }
-  .callout .ico { color: var(--clay); font-weight: 600; }
-
-  /* ── faq ──────────────────────────────── */
-  dl.faq { margin-top: 8px; }
-  dl.faq dt {
-    font-family: var(--serif);
-    font-size: 16px;
-    color: var(--slate);
-    margin-top: 18px;
-  }
-  dl.faq dd { font-size: 14px; margin: 4px 0 0; max-width: 640px; }
-
-  /* ── optional extensions (same grammar) ─ */
-  ul.gotchas { padding-left: 20px; max-width: 680px; }
-  ul.gotchas li { margin-bottom: 8px; }
-  table.grid {
-    width: 100%;
-    max-width: 680px;
-    border-collapse: collapse;
-    background: #fff;
-    border: 1.5px solid var(--gray-300);
-    border-radius: 10px;
-    overflow: hidden;
-    font-size: 14px;
-    margin: 16px 0;
-  }
-  table.grid th {
-    text-align: left;
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--gray-500);
-    font-weight: normal;
-    background: var(--gray-150);
-    padding: 9px 14px;
-    border-bottom: 1px solid var(--gray-300);
-  }
-  table.grid td {
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--gray-300);
-    vertical-align: top;
-  }
-  table.grid tr:last-child td { border-bottom: none; }
-  pre.plain {
-    background: #fff;
-    border: 1.5px solid var(--gray-300);
-    border-radius: 10px;
-    padding: 16px 18px;
-    font-family: var(--mono);
-    font-size: 12.5px;
-    line-height: 1.6;
-    color: var(--slate);
-    overflow-x: auto;
-    margin: 16px 0;
-    max-width: 680px;
-  }
-
-@media print { body { padding: 0; } nav { display:none; } .page { display:block; } details { break-inside:avoid; } }
-button { font:inherit; padding:8px; margin:4px; cursor:pointer; }</style></head><body><div class="page"><nav><div class="label">Course</div><a href="../lessons/0001-first-rule.html">01 · First rule</a><a href="../lessons/0002-precision-and-tests.html">02 · Precision and tests</a><a href="../lessons/0003-ship-the-rule.html">03 · Ship the rule</a><a href="../reference/rule-writing.html">Quick reference</a><div class="files"><div class="label">Sources</div><code>Oxc plugin guide</code><code>ESLint custom rules</code></div></nav><main><header><div class="eyebrow">Oxlint rule lab · five-minute lesson</div><h1>03 · Wire the rule into a project</h1><div class="tldr"><b>TL;DR</b> — A rule becomes useful when configuration loads its plugin and enables its name. Rebuild the rule from memory, then run its checks in CI.</div></header><h2>Trace the wiring</h2><p>The plugin exports <code>meta.name = "lab"</code> and the rule key <code>no-focused-tests</code>. Configuration loads <code>./plugin.js</code> and enables <code>lab/no-focused-tests</code>. Paths resolve relative to the configuration file. Read <a href="https://oxc.rs/docs/guide/usage/linter/js-plugins#using-js-plugins">Oxlint plugin registration</a>.</p><pre class="plain">{
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>03 · Wire the rule into a project</title><link rel="stylesheet" href="../assets/course.css"><style>* { box-sizing: border-box; }
+body { margin:0; background:#fff; color:#202530; font:16px/1.7 system-ui,sans-serif; padding:48px 24px 100px; }
+.page { display:grid; grid-template-columns:190px minmax(0,1fr); gap:56px; max-width:1080px; margin:auto; }
+nav { position:sticky; top:32px; align-self:start; font-size:14px; }
+nav a { display:block; padding:7px 0; }
+a { color:#245dcc; text-underline-offset:3px; }
+.label,.eyebrow,.where { font:12px/1.6 ui-monospace,monospace; color:#687384; }
+.eyebrow { text-transform:uppercase; letter-spacing:.08em; }
+h1 { font-size:clamp(30px,4vw,42px); line-height:1.2; letter-spacing:-.035em; margin:12px 0 24px; }
+h2 { font-size:23px; line-height:1.3; margin:36px 0 12px; }
+p { max-width:700px; margin:12px 0; }
+.tldr,details { border:1px solid #dbe0e8; border-radius:8px; padding:18px 22px; margin:18px 0; }
+.tldr { border-left:4px solid #245dcc; }
+summary { cursor:pointer; font-weight:650; }
+.where { float:right; }
+code,pre { font-family:ui-monospace,monospace; font-size:14px; }
+pre { background:#f5f7fa; border:1px solid #dbe0e8; border-radius:8px; padding:18px; overflow-x:auto; line-height:1.6; }
+button { background:#fff; color:#202530; border:1px solid #adb7c7; border-radius:5px; font:inherit; padding:7px 14px; margin:6px 8px 6px 0; cursor:pointer; }
+button:hover { border-color:#245dcc; }
+button:focus-visible,a:focus-visible,summary:focus-visible { outline:3px solid #245dcc; outline-offset:3px; }
+.files { margin-top:28px; border-top:1px solid #dbe0e8; padding-top:18px; }
+.files code { display:block; font-size:12px; color:#687384; }
+dl dt { font-weight:650; margin-top:18px; } dl dd { margin:4px 0; }
+@media(max-width:800px) { .page { grid-template-columns:1fr; gap:28px; } nav { position:static; } nav a { display:inline-block; margin-right:16px; } nav .files { display:none; } }
+@media print { body { padding:0; font-size:12px; } nav { display:none; } .page { display:block; } details,pre { break-inside:avoid; } button { display:none; } }
+</style></head><body><div class="page"><nav><div class="label">Course</div><a href="../lessons/0001-first-rule.html">01 · First rule</a><a href="../lessons/0002-precision-and-tests.html">02 · Precision and tests</a><a href="../lessons/0003-ship-the-rule.html">03 · Ship the rule</a><a href="../reference/rule-writing.html">Quick reference</a><div class="files"><div class="label">Sources</div><code>Oxc plugin guide</code><code>ESLint custom rules</code></div></nav><main><header><div class="eyebrow">Oxlint rule lab · five-minute lesson</div><h1>03 · Wire the rule into a project</h1><div class="tldr"><b>TL;DR</b> — A rule becomes useful when configuration loads its plugin and enables its name. Rebuild the rule from memory, then run its checks in CI.</div></header><h2>Trace the wiring</h2><p>The plugin exports <code>meta.name = "lab"</code> and the rule key <code>no-focused-tests</code>. Configuration loads <code>./plugin.js</code> and enables <code>lab/no-focused-tests</code>. Paths resolve relative to the configuration file. Read <a href="https://oxc.rs/docs/guide/usage/linter/js-plugins#using-js-plugins">Oxlint plugin registration</a>.</p><pre class="plain">{
   &quot;categories&quot;: {
     &quot;correctness&quot;: &quot;off&quot;
   },
